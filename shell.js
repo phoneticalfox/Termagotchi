@@ -62,71 +62,83 @@ window.onload = () => {
   }
 
   // --- COMMANDS ---
-  function runCommand(line) {
-    const [cmd, ...args] = line.split(" ");
-    const dir = getDir(cwd);
+function runCommand(line) {
+  if (!line.trim()) return;
 
-    // Every command makes Termagotchi a little hungrier
-    pet.hunger = Math.min(10, pet.hunger + 1);
-    updatePetStatus();
+  const parts = line.trim().split(/\s+/);
+  const rawCmd = parts[0];
+  const args = parts.slice(1);
+  const cmd = rawCmd.toLowerCase(); // make case-insensitive
 
-    switch (cmd) {
-      case "ls":
-        printOutput(Object.keys(dir).join("  "));
-        break;
+  const dir = getDir(cwd);
 
-      case "cd":
-        if (args[0] === "..") {
-          if (cwd.length > 1) cwd.pop();
-        } else if (dir[args[0]] && typeof dir[args[0]] === "object") {
-          cwd.push(args[0]);
-        } else {
-          printOutput("No such directory");
-        }
-        break;
+  // Every command makes Termagotchi a little hungrier
+  pet.hunger = Math.min(10, pet.hunger + 1);
+  updatePetStatus();
 
-      case "pwd":
-        printOutput(cwd.join("/").replace("//","/"));
-        break;
+  switch (cmd) {
+    case "ls":
+      printOutput(Object.keys(dir).join("  "));
+      break;
 
-      case "cat":
-        if (dir[args[0]] && typeof dir[args[0]] === "string") {
-          printOutput(dir[args[0]]);
-        } else {
-          printOutput("No such file");
-        }
-        break;
+    case "cd":
+      if (!args[0] || args[0] === "~") {
+        // cd → go home
+        cwd = ["/", "home"];
+      } else if (args[0] === "/") {
+        cwd = ["/"];
+      } else if (args[0] === "..") {
+        if (cwd.length > 1) cwd.pop();
+      } else if (dir[args[0]] && typeof dir[args[0]] === "object") {
+        cwd.push(args[0]);
+      } else {
+        printOutput("No such directory");
+      }
+      break;
 
-      case "echo":
-        printOutput(args.join(" "));
-        pet.happiness = Math.min(10, pet.happiness + 1);
-        updatePetStatus();
-        break;
+    case "pwd":
+      // Normalize slashes
+      printOutput(cwd.join("/").replace(/\/+/g, "/"));
+      break;
 
-      case "feed":
-        pet.hunger = Math.max(0, pet.hunger - 3);
-        printOutput("You fed your Termagotchi.");
-        updatePetStatus();
-        break;
+    case "cat":
+      if (dir[args[0]] && typeof dir[args[0]] === "string") {
+        printOutput(dir[args[0]]);
+      } else {
+        printOutput("No such file");
+      }
+      break;
 
-      case "play":
-        pet.happiness = Math.min(10, pet.happiness + 3);
-        printOutput("You played with your Termagotchi!");
-        updatePetStatus();
-        break;
+    case "echo":
+      printOutput(args.join(" "));
+      pet.happiness = Math.min(10, pet.happiness + 1);
+      updatePetStatus();
+      break;
 
-      case "help":
-        printOutput("Commands: ls, cd, pwd, cat, echo, feed, play, help, clear");
-        break;
+    case "feed":
+      pet.hunger = Math.max(0, pet.hunger - 3);
+      printOutput("You fed your Termagotchi.");
+      updatePetStatus();
+      break;
 
-      case "clear":
-        term.innerHTML = "";
-        break;
+    case "play":
+      pet.happiness = Math.min(10, pet.happiness + 3);
+      printOutput("You played with your Termagotchi!");
+      updatePetStatus();
+      break;
 
-      default:
-        if (cmd.trim() !== "") printOutput(`${cmd}: command not found`);
-    }
+    case "help":
+      printOutput("Commands: ls, cd, pwd, cat, echo, feed, play, help, clear");
+      break;
+
+    case "clear":
+      term.innerHTML = "";
+      break;
+
+    default:
+      printOutput(`${rawCmd}: command not found`);
   }
+}
 
   // --- INPUT HANDLER ---
   function handleInput() {
