@@ -1,0 +1,54 @@
+body {
+  margin: 0;
+  background: #000;
+  color: #0f0;
+  font-family: monospace;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+#terminal {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  font-size: 1rem;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+#controls {
+  display: flex;
+  border-top: 1px solid #0f0;
+  padding: 5px;
+  background: #111;
+}
+
+#input {
+  flex: 1;
+  background: #000;
+  color: #0f0;
+  border: none;
+  outline: none;
+  padding: 8px;
+  font-size: 1rem;
+}
+
+#send,
+#save,
+#load {
+  background: #111;
+  border: 1px solid #0f0;
+  color: #0f0;
+  margin-left: 5px;
+  padding: 8px;
+  font-size: 1rem;
+  border-radius: 6px;
+}
+
+#send:active,
+#save:active,
+#load:active {
+  background: #0f0;
+  color: #000;
+}
