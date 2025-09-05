@@ -181,4 +181,17 @@ window.onload = () => {
   updatePetStatus();
   printOutput("🐚 Termagotchi v0.3");
   printOutput("Type 'help' for a list of commands.");
+
+  function adjustHeight() {
+  const term = document.getElementById("terminal");
+  const controls = document.getElementById("controls");
+
+  // Always fill what's left under controls
+  const available = window.innerHeight - controls.offsetHeight;
+  term.style.height = available + "px";
+}
+
+// Run on load + when resized (keyboard up/down)
+window.addEventListener("resize", adjustHeight);
+window.addEventListener("load", adjustHeight);
 };
