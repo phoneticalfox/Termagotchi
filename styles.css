@@ -5,7 +5,8 @@ body {
   font-family: monospace;
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100dvh; /* dynamic viewport height */
+  overflow: hidden;
 }
 
 #terminal {
@@ -15,6 +16,7 @@ body {
   font-size: 1rem;
   line-height: 1.4;
   word-wrap: break-word;
+  transition: height 0.25s ease; /* animate resize */
 }
 
 #controls {
